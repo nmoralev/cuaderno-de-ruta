@@ -1,0 +1,8 @@
+{
+  "appId": "cl.cuaderno.ruta",
+  "appName": "Cuaderno de Ruta",
+  "webDir": "www",
+  "backgroundColor": "#080C0A",
+  "server": { "androidScheme": "https", "iosScheme": "https" },
+  "ios": { "contentInset": "never" }
+}
