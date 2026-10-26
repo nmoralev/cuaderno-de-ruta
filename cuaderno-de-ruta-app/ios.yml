@@ -1,0 +1,24 @@
+name: Proyecto iOS (para abrir en Xcode)
+
+# iOS no permite instalar apps sin firma de Apple, así que este flujo NO genera un instalable.
+# Solo comprueba que el proyecto iOS se genera bien y lo deja como descarga para abrirlo en Xcode (en un Mac).
+on:
+  workflow_dispatch:
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm run ios:add
+      - run: npx capacitor-assets generate --ios --assetPath assets
+      - name: Empaquetar proyecto
+        run: zip -qr cuaderno-ios-xcode.zip ios
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cuaderno-ios-xcode
+          path: cuaderno-ios-xcode.zip
