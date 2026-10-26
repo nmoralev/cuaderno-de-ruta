@@ -1,0 +1,37 @@
+name: Compilar app Android (APK)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cuaderno-de-ruta-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: cuaderno-de-ruta-app/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Dependencias
+        run: npm install
+      - name: Crear proyecto Android
+        run: npm run android:add
+      - name: Iconos de la app
+        run: npx capacitor-assets generate --android --assetPath assets
+      - name: Compilar APK
+        working-directory: cuaderno-de-ruta-app/android
+        run: ./gradlew assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cuaderno-de-ruta-apk
+          path: cuaderno-de-ruta-app/android/app/build/outputs/apk/debug/app-debug.apk
